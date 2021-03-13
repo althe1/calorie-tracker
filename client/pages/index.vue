@@ -4,6 +4,7 @@
     <b-row>
       <b-col>
         <line-chart v-if="data" :data="data" />
+        <Table v-on:deleteValue="deleteValue" :items="data" />
       </b-col>
       <b-col>
         <calorie-form v-on:addValue="addValue" />
@@ -26,7 +27,12 @@ export default {
   methods: {
     addValue(entry) {
       this.data.push(entry);
-      console.log({ entry });
+    },
+    async deleteValue(id) {
+      try {
+        await this.$axios.delete(`/calories/${id}`);
+        this.data = this.data.filter(entry => id !== entry.id);
+      } catch {}
     }
   }
 };
